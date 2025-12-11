@@ -18,7 +18,7 @@ function Review() {
     <div>
       <h1 id="review-heading">Our Reviews</h1>
       <div className="review" key={review.id}>
-        <p className="author">{review.name}</p>
+        <p className={`author-${review.id}`}>{review.name}</p>
         <p className="job">{review.job}</p>
         <p className="info">{review.text}</p>
         <img
