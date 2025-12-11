@@ -1,54 +1,63 @@
 import React, { useState } from "react";
-import data from "../assets/data.js";
-function Review() {
+import reviews from "../assets/data.js"; // assuming data.js exports the array
+
+export default function Review() {
   const [index, setIndex] = useState(0);
-  const handlePrevBtn = () => {
-    if (index >= 1) setIndex((ind) => ind - 1);
+
+  const checkIndex = (num) => {
+    if (num > reviews.length - 1) return 0;
+    if (num < 0) return reviews.length - 1;
+    return num;
   };
-  const handleNextBtn = () => {
-    if (index < data.length - 1) setIndex((ind) => ind + 1);
+
+  const nextPerson = () => {
+    setIndex((idx) => checkIndex(idx + 1));
   };
-  const handleRandBtn = () => {
-    let ind = parseInt(Math.random() * data.length);
-    if (index != ind) setIndex(ind);
+
+  const prevPerson = () => {
+    setIndex((idx) => checkIndex(idx - 1));
   };
-  console.log("Rerender");
-  let review = data[index];
+
+  const randomPerson = () => {
+    let randomIndex = Math.floor(Math.random() * reviews.length);
+    if (randomIndex === index) {
+      randomIndex = index + 1; // avoid same index
+    }
+    setIndex(checkIndex(randomIndex));
+  };
+
+  const { id, name, job, image, text } = reviews[index];
+
   return (
-    <div>
-      <h1 id="review-heading">Our Reviews</h1>
-      <div className="review" key={review.id}>
-        <p className="author" id={`author-${review.id}`}>
-          {review.name}
-        </p>
-        <p className="job">{review.job}</p>
-        <p className="info">{review.text}</p>
-        <img
-          src={review.image}
-          className="person-img"
-          height="200px"
-          width="200px"
-        ></img>
+    <article className="review">
+      <img
+        src={image}
+        alt={name}
+        className="person-img"
+        height="200xp"
+        width="200px"
+      />
+
+      {/* IMPORTANT: dynamic ID author-id */}
+      <h4 className="author" id={`author-${id}`}>
+        {name}
+      </h4>
+
+      <p className="job">{job}</p>
+      <p className="info">{text}</p>
+
+      <div className="button-container">
+        <button className="prev-btn" onClick={prevPerson}>
+          previous
+        </button>
+        <button className="next-btn" onClick={nextPerson}>
+          next
+        </button>
       </div>
-      <button
-        className="prev-btn"
-        onClick={handlePrevBtn}
-        disabled={index == 0 ? true : false}
-      >
-        previous
-      </button>
-      <button
-        className="next-btn"
-        onClick={handleNextBtn}
-        disabled={index == data.length - 1 ? true : false}
-      >
-        next
-      </button>
-      <button className="random-btn" onClick={handleRandBtn}>
+
+      <button className="random-btn" onClick={randomPerson}>
         surprise me
       </button>
-    </div>
+    </article>
   );
 }
-
-export default Review;
